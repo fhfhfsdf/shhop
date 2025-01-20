@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vape SHOT 10ML 50MG - ALMOND LATTE</title>
+    <link rel="stylesheet" href="styles1.css">
+</head>
+<body>
+    <div class="header">
+        Vape SHOT 10ML 50MG - ALMOND LATTE
+    </div>
+    
+    <div class="product-details">
+        <div class="product-info">
+            <img src="https://via.placeholder.com/300" alt="Vape SHOT 10ML 50MG - ALMOND LATTE">
+            <h2>Ціна: 130 грн</h2>
+            <p>Vape SHOT 10ML 50MG - ALMOND LATTE – смачний та ароматний смак мигдального латте, 
+                який надасть вам насолоду від кожного вдиху.</p>
+            <p>Об’єм: 10 мл, Міцність: 50 мг/мл</p>
+            <a href="index.html" class="back-button">Повернутися на головну</a>
+            <button class="buy-button" id="buyBtn">Купити</button>
+        </div>
+    </div>
+
+    <div class="cart-notification" id="cartNotification">
+        Товар додано в кошик!
+    </div>
+
+    <script>
+        // Функція для додавання товару в кошик
+        document.getElementById('buyBtn').addEventListener('click', function() {
+            // Логіка додавання товару в кошик (можна реалізувати з використанням LocalStorage, сесії або серверної частини)
+            document.getElementById('cartNotification').style.display = 'block';
+
+            // Сховати сповіщення через 3 секунди
+            setTimeout(function() {
+                document.getElementById('cartNotification').style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
