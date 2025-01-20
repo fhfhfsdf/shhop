@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vape Shop</title>
+    <style>
+        /* Загальні стилі для сторінки */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff; /* Білий фон */
+            color: #333333; /* Темно-сірий текст */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Заголовок */
+        .header {
+            background-color: #2ecc71; /* Зеленуватий фон */
+            color: #ffffff; /* Білий текст */
+            padding: 20px;
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Кнопка меню з трьома рисочками */
+        .menu-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 2em;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 30px; /* Висота кнопки */
+            width: 35px; /* Ширина кнопки */
+        }
+
+        /* Лінії меню */
+        .menu-button div {
+            height: 5px; /* Товщина ліній */
+            background-color: white;
+            border-radius: 5px; /* Скруглення ліній */
+            transition: 0.3s; /* Анімація при натисканні */
+        }
+
+        /* Меню */
+        .menu {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: #ffffff; /* Білий фон */
+            color: #333333; /* Темний текст */
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s, height 0.3s ease;
+        }
+
+        .menu.show {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+            height: auto;
+            transition: opacity 0.3s ease, visibility 0s linear 0s, height 0.3s ease;
+        }
+
+        /* Загальний стиль для меню */
+        .menu a {
+            color: #333333; /* Темний текст */
+            text-decoration: none; /* Без підкреслення */
+            padding: 15px 20px;
+            font-size: 1.2em;
+            display: block;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 6px;
+        }
+
+        /* Ефект наведення на посилання */
+        .menu a:hover {
+            background-color: #2ecc71; /* Зеленуватий фон */
+            color: white; /* Білий текст */
+        }
+
+        /* Стиль для роздільників між кнопками */
+        .menu .section-divider {
+            background-color: #2ecc71; /* Зеленуватий фон для роздільників */
+            height: 1px;
+            margin: 10px 0;
+        }
+
+        /* Контейнер для товарів */
+        .product-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        /* Картка товару */
+        .product-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-card img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .product-card h3 {
+            font-size: 1.5em;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+
+        .product-card p {
+            color: #777777;
+            margin-bottom: 20px;
+        }
+
+        .product-card .price {
+            font-size: 1.3em;
+            color: #2ecc71;
+            margin-bottom: 20px;
+        }
+
+        .product-card .add-to-cart,
+        .product-card .add-to-favorites {
+            padding: 12px 25px;
+            background-color: #2ecc71;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .product-card .add-to-cart:hover,
+        .product-card .add-to-favorites:hover {
+            background-color: #27ae60;
+        }
+
+        .product-card .add-to-favorites {
+            background-color: #e74c3c; /* Червона кнопка для додавання в улюблене */
+        }
+
+        .product-card .add-to-favorites:hover {
+            background-color: #c0392b;
+        }
+
+        /* Анімація для кнопки "додано в улюблене" */
+        .added-to-favorites {
+            background-color: #2ecc71 !important;
+            color: white !important;
+            cursor: not-allowed;
+        }
+
+        /* Форма для пошуку і сортування */
+        .search-sort-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            align-items: center;
+        }
+
+        .search-sort-container input,
+        .search-sort-container select {
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Заголовок -->
+    <div class="header">
+        Vape Shop
+    </div>
+
+    <!-- Кнопка меню з трьома рисочками -->
+    <div class="menu-container">
+        <button class="menu-button" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </button>
+    </div>
+    
+    <!-- Меню -->
+    <div class="menu" id="menu">
+        <div class="section-divider"></div>
+        <a href="home.html">Персональний кабінет</a>
+        <div class="section-divider"></div>
+        <a href="cart.html">Кошик</a>
+        <div class="section-divider"></div>
+        <a href="favorites.html">Избране</a>
+        <div class="section-divider"></div>
+    </div>
+
+    <!-- Форма для пошуку і сортування -->
+    <div class="search-sort-container">
+        <input type="text" id="searchInput" placeholder="Пошук по назві" onkeyup="searchProducts()">
+        <select id="sortSelect" onchange="sortProducts()">
+            <option value="default">Сортувати за</option>
+            <option value="price-asc">Ціна: низька до високої</option>
+            <option value="price-desc">Ціна: висока до низької</option>
+        </select>
+    </div>
+
+    <!-- Контейнер для товарів -->
+   
+        <!-- Товари будуть додаватися тут -->
+    </div>
+
+    <!-- Кнопка для додавання нового товару -->
+    <a href="page1.html" class="add-product-button">Додати новий товар</a>
+
+    <script>
+        // Функція для завантаження товарів з localStorage
+        function loadProducts() {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const productsContainer = document.getElementById('products-container');
+
+            if (products.length === 0) {
+                productsContainer.innerHTML = '<p>Товари відсутні. Додайте нові товари.</p>';
+                return;
+            }
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3><a href="#">${product.name}</a></h3>
+                    <p>${product.description}</p>
+                    <p class="price">${product.price} грн</p>
+                    <button class="add-to-cart" onclick="addToCart('${product.name}', ${product.price}, '${product.image}')">Додати в кошик</button>
+                    <button class="add-to-favorites" onclick="addToFavorites('${product.name}', ${product.price}, '${product.image}')">Додати в улюблене</button>
+                `;
+                productsContainer.appendChild(productCard);
+            });
+        }
+
+        // Завантажуємо товари при завантаженні сторінки
+        window.onload = loadProducts;
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+  <div class="product-container" id="productContainer">
+    <div class="product-card">
+        <h3><a href="product1.html">Vape SHOT 10ML 50MG - ALMOND LATTE (МИГДАЛЬНЕ ЛАТЕ)</a></h3>
+        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3//AABEIAFwARwMBIgACEQEDEQH/xAAcAAEAAgMBAQEAAAAAAAAAAAAABAUDBgcCAQj/xAA5EAABAwIEAQcKBQUAAAAAAAABAAIDBBEFEiExBhMiQVFhkbEUNGJxcnOBocHRBxUyNfAWJVOCkv/EABkBAAIDAQAAAAAAAAAAAAAAAAAEAgMFAf/EACIRAAIBBAICAwEAAAAAAAAAAAABAgMEERIhURMxFDJBBf/aAAwDAQACEQMRAD8A7iiIgAiwVtbS0EBnraiKCEGxfK4NA+JUR+M0smHitw+aCriLsofHIC0n1i6jKSiss6k28IskVMzG+aOUhaw+3cH5L6cbZ0Nb8/sl/mUey3wVOi4RVLMbjvz26ejdWrHZmhw2IuradaFT6shOnKHs+oiK0gERQccrX4bhFXWxMbJJDGXNa42BPagDQ/xXxWKenfhcbs3I86W2wcWk29YFv+1Tfh9ilsCgonHmVbGyR3/ysGV7fi0NIHouWqYljBqGyMlEj5nX5SRxHPkeSXO7+joUbAMWOG4O+mcwvmjkE9O8bMduL9nQR0glQqw3g49koS1kmdiDyHRh3WfoomIyvbRzGN2V1tHdWqw4VXGtpKSqe0MMrA7Lmva9tLrLJaQOa7Z1wVha68M1VLnJrnD8k1NjxpxI4xvjcXsvoC2wv33712Cm1p4j6A8FzShw3yKqmqXua6SRtm26G3v3nTuC6VS+aw+w3wWhZ/aQteNPGDKiItARCqOLjl4axA9UJKt1TcZX/pXFMt7incdBdAH54xIh1bK5osHPaR8VGg1gl7GN+i84hOW1DwwsI0P6r2ssENQRSvcSxt7NJPRsgDsPDt24JhzhvyDSO4KevPCUNP8AktEKgZgKdmXMS3oV4Keg6I2n/Y/dY0qWzbyvbH/KorGCol3b7I8FvVL5rD7DfBa5ydC51jEwkabn7rZYLcjHl2yi1k3aQ1lJ5yUVp7JcHtERPC4UXExA7D6htWAad0ZEgN7Fp32UpV+P/s1Z7oqM3iLZ1cs0LEOF+D6ud7qiNmY6G9VI35FyrpuDuG4pKeOhfFHQuePKmeUvOZoNyN9QdrKZixDXyOdCw3bYOdlFzbTdQKeTlMEDsrG846MFhusqd5LVDkaCTyZazECXPZRhpp45pIoct9WBrbb9hKRVta6PMc9if59VXYeRkj1GlRJvt+hu/YrRtzJK10kZ1zAZrADW40I1Ssmy9Ix/mFU2TkxK4BzhfUrq9ESaOAnfk2+C4++3lIy7Zxa/rXYKLzOD3bfBPfz225ZFrn0jMiItMUCr8f8A2as90VYKDjUUk2FVUUDc0j4yGt6yozWYtHY8NHPMQaDVmzCSWX0tra+mpVZRn+xD23eK8YpPxA2d9uHcQHVkax4uo1MMefhwpouGsRMuYnn5WA37SVjStazSWo/5YdmKilyXNyMs7joL7tb2hW8NYx3PBlzEDXr3vpfTcdJ2U2l4CxZ0THmaCMyNDnxvBux1gCLjdToeBMRa0B1ZT6egfuiVrW/EEa1Ps1t5BqgQLAyCw+K7DReZwe7b4LRhwHXGQPOIQixBtyJ+63unjMVPFG43LGBpI6bBOWVGdPO6F684yxgyIiJ8XCIiACIiACIiACIiACIiAP/Z" alt="Vape SHOT 10ML 50MG - ALMOND LATTE">
+        <p>Ціна: 130 грн</p>
+        <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - ALMOND LATTE (МИГДАЛЬНЕ ЛАТЕ)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+        <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - ALMOND LATTE (МИГДАЛЬНЕ ЛАТЕ)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+    </div>
+</div>
+        <div class="product-card">
+            <h3><a href="product2.html">Vape SHOT 10ML 50MG - APPLE (ЯБЛУКО)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - APPLE (ЯБЛУКО)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - APPLE (ЯБЛУКО)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product3.html">Vape SHOT 10ML 50MG - BERRIES (ЯГОДИ)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - BERRIES (ЯГОДИ)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - BERRIES (ЯГОДИ)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product4.html">Vape SHOT 10ML 50MG - BUBBLEGUM (ЖУЙКА)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - BUBBLEGUM (ЖУЙКА)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - BUBBLEGUM (ЖУЙКА)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product5.html">Vape SHOT 10ML 50MG - CHERRY LEMON (ВИШНЯ ЛИМОН)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - CHERRY LEMON (ВИШНЯ ЛИМОН)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - CHERRY LEMON (ВИШНЯ ЛИМОН)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product6.html">Vape SHOT 10ML 50MG - CURRANT MINT (СМОРОДИНА МʼЯТА)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - CURRANT MINT (СМОРОДИНА МʼЯТА)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - CURRANT MINT (СМОРОДИНА МʼЯТА)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product7.html">Vape SHOT 10ML 50MG - ENERGY (ЕНЕРГЕТИК)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - ENERGY (ЕНЕРГЕТИК)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - ENERGY (ЕНЕРГЕТИК)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product8.html">Vape SHOT 10ML 50MG - FROZEN BERRIES (ЗАМОРОЖЕНІ ЯГОДИ)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - FROZEN BERRIES (ЗАМОРОЖЕНІ ЯГОДИ)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - FROZEN BERRIES (ЗАМОРОЖЕНІ ЯГОДИ)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product9.html">Vape SHOT 10ML 50MG - ORANGE (АПЕЛЬСИН)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - ORANGE (АПЕЛЬСИН)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - ORANGE (АПЕЛЬСИН)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product10.html">Vape SHOT 10ML 50MG - PASSION FRUIT GUAVA (МАРАКУЯ ГУАВА)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - PASSION FRUIT GUAVA (МАРАКУЯ ГУАВА)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - PASSION FRUIT GUAVA (МАРАКУЯ ГУАВА)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product11.html">Vape SHOT 10ML 50MG - TROPIC (ТРОПІК)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - TROPIC (ТРОПІК)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - TROPIC (ТРОПІК)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product12.html">Vape SHOT 10ML 50MG - WATERMELON LEMON (КАВУН ЛИМОН)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - WATERMELON LEMON (КАВУН ЛИМОН)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - WATERMELON LEMON (КАВУН ЛИМОН)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+        <div class="product-card">
+            <h3><a href="product13.html">Vape SHOT 10ML 50MG - WATERMELON RASPBERRY (КАВУН МАЛИНА)</a></h3>
+            <p>Ціна: 130 грн</p>
+            <button class="add-to-cart" onclick="addToCart('Vape SHOT 10ML 50MG - WATERMELON RASPBERRY (КАВУН МАЛИНА)', 130, 'https://via.placeholder.com/300')">Додати в кошик</button>
+            <button class="add-to-favorites" onclick="addToFavorites('Vape SHOT 10ML 50MG - WATERMELON RASPBERRY (КАВУН МАЛИНА)', 130, 'https://via.placeholder.com/300')">Додати в улюблене</button>
+        </div>
+    </div>
+
+    <script>
+        // Функція для відкриття/закриття меню
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            if (menu.classList.contains('show')) {
+                menu.classList.remove('show');
+            } else {
+                menu.classList.add('show');
+            }
+        }
+
+        // Функція для додавання товару в кошик
+        function addToCart(name, price, image) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            const existingProduct = cart.find(item => item.name === name);
+
+            if (existingProduct) {
+                existingProduct.quantity++;
+            } else {
+                cart.push({ name, price, image, quantity: 1 });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(name + " додано до кошика!");
+        }
+
+        // Функція для додавання товару в улюблене
+        function addToFavorites(name, price, image) {
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+            // Перевірка, чи товар вже в улюбленому
+            const existingProduct = favorites.find(item => item.name === name);
+            const button = event.target;
+
+            if (!existingProduct) {
+                favorites.push({ name, price, image });
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                alert(name + " додано в улюблене!");
+
+                // Додавання анімації
+                button.textContent = "Видалити з улюбленого";
+                button.classList.add("added-to-favorites");
+                button.setAttribute("onclick", `removeFromFavorites('${name}')`);
+            }
+        }
+
+        // Функція для видалення товару з улюбленого
+        function removeFromFavorites(name) {
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+            // Видалення товару
+            favorites = favorites.filter(item => item.name !== name);
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+
+            alert(name + " видалено з улюбленого!");
+
+            // Оновлення кнопки
+            const button = event.target;
+            button.textContent = "Додати в улюблене";
+            button.classList.remove("added-to-favorites");
+            button.setAttribute("onclick", `addToFavorites('${name}')`);
+        }
+    </script>
+
+</body>
+</html>
+
+
